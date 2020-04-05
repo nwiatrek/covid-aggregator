@@ -1,5 +1,5 @@
 import requests
-from operator import itemgetter
+
 
 class News():
     def __init__(self, location):
@@ -24,6 +24,7 @@ def sort_by_heat(data):
 
 
 def remove_unwanted_keys(data):
+    """Removes categories, images, tags"""
     for news in data:
         news.pop('categories', None)
         news.pop('images', None)
