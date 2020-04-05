@@ -1,5 +1,6 @@
 import unittest
 from news.news import *
+import random, string
 
 
 class TestNews(unittest.TestCase):
@@ -45,6 +46,26 @@ class TestNews(unittest.TestCase):
         remove_none_heat(news)
         self.assertEqual(2, len(remove_none_heat(news)))
 
+    def test_location_none(self):
+        with self.assertRaisesRegex(Exception, 'No location given'):
+            verify_location(None)
+
+    def test_location_not_us(self):
+        with self.assertRaisesRegex(Exception, 'Only US supported at the moment'):
+            verify_location('not us')
+
+    def test_location_not_valid_iso(self):
+        for i in range(10):
+            location = 'US'
+            if i % 2 == 0:
+                location += '-'
+                location += random.choice(string.ascii_letters) + random.choice(string.ascii_letters) + \
+                            random.choice(string.ascii_letters) + random.choice(string.ascii_letters)
+            if i % 2 != 0:
+                location += random.choice(string.ascii_letters)
+
+            with self.assertRaisesRegex(Exception, 'invalid format please look at ISO 3166-1 alpha-2'):
+                verify_location(location)
 
 
 if __name__ == '__main__':
