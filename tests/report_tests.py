@@ -1,6 +1,6 @@
 import unittest
-from flask import Flask
-from views.report import *
+from unittest import mock
+from report.report import *
 
 
 class TestReport(unittest.TestCase):
@@ -188,17 +188,44 @@ class TestReport(unittest.TestCase):
                       "Tot\u00a0Cases/1M pop": "290", "USAState": "Texas"}
 
     def test_get_report_by_country_no_state(self):
-        response = get_report_by_country(None, self.mock_response)
-        self.assertEqual(response, self.mock_response)
+        report = Report("")
+        response = report.get_report_by_country(self.mock_response)
+        expected_response = self.mock_response, 200
+        self.assertEqual(response, expected_response)
 
     def test_get_report_by_country_with_state(self):
-        response = get_report_by_country("Texas", self.mock_response)
-        self.assertEqual(response, self.texas_response)
+        report = Report("Texas")
+        response = report.get_report_by_country(self.mock_response)
+        expected_response = self.texas_response, 200
+        self.assertEqual(response, expected_response)
 
-    # def test_get_report_by_country_404(self):
-    #     response = get_report_by_country("FakeState", self.mock_response)
-    #     expected_response = "Didn't find any data for state: FakeState"
-    #     self.assertEqual(response, expected_response)
+    def test_get_report_by_country_bad_state(self):
+        report = Report("FakeState")
+        response = report.get_report_by_country(self.mock_response)
+        expected_response = "Didn't find any data for state: FakeState", 404
+        self.assertEqual(response, expected_response)
+
+    def test_get_report_by_country_Unmarshalling_error(self):
+        report = Report(None)
+        response = report.get_report_by_country(self.mock_response)
+        expected_response = "Internal Server Error: Unmarshalling error ", 500
+        self.assertEqual(response, expected_response)
+
+    @mock.patch('requests.get')
+    def test_get_all_reports_happy_path(self, mock_get):
+        report = Report(None)
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = self.mock_response
+        response = report.get_all_reports()
+        expected_response = self.mock_response
+        self.assertEqual(response, expected_response)
+
+    @mock.patch('requests.get', side_effect=Exception)
+    def test_get_all_reports_sad_path(self, mock_get):
+        report = Report(None)
+        response = report.get_all_reports()
+        expected_response = "Internal Server Error: Failure calling downstream", 500
+        self.assertEqual(response, expected_response)
 
 
 if __name__ == '__main__':
