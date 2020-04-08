@@ -29,7 +29,7 @@ def sort_by_heat(data):
     news = data.get('news')
     remove_unwanted_keys(news)
     return sorted(remove_none_heat(news), key=lambda x: x['heat'], reverse=True)
-
+ 
 
 def remove_unwanted_keys(data):
     """Removes categories, images, tags"""
