@@ -8,6 +8,7 @@ news = Blueprint('news', __name__)
 def timeline():
     try:
         location = request.args.get('location')
+        print(location)
         verify_location(location)
         news = News(location)
         return jsonify(news.get_news())
