@@ -19,7 +19,7 @@ def verify_location(location):
         raise Exception("No location given")
     if 'US' not in location:
         raise Exception('Only US supported at the moment')
-    regex = re.compile('[A-Za-z]{2,3}-[A-Za-z]{2,3}\b')
+    regex = re.compile('[A-Za-z]{2,3}-[A-Za-z]{2,3}\Z')
     if regex.match(location) is None:
         raise Exception('invalid format please look at ISO 3166-1 alpha-2')
 
