@@ -7,7 +7,7 @@ void loadProperties() {
 
 void exportUnitTests() {
     echo 'Exporting Tests'
-    sh("docker cp covid_aggregator_unittests_${env.BUILD_ID}:/opt/job-manager/results.xml results.xml")
+    sh("docker cp covid_aggregator_unittests_${env.BUILD_ID}:/opt/covid-aggregator/results.xml results.xml")
     utils.exportPytestResults()
 }
 
