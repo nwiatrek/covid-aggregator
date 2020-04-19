@@ -13,4 +13,4 @@ def timeline():
         news = News(location)
         return jsonify(news.get_news())
     except Exception as ex:
-        return Response(status=400, response=str(ex))
+        return Response(status=500, response=str(ex))
