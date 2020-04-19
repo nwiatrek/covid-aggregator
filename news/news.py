@@ -11,7 +11,10 @@ class News:
     def get_news(self):
         params = {'Subscription-key': self._key}
         response = requests.get(self._url + self.location, params)
-        return sort_by_heat(response.json())
+        if response.ok:
+            return sort_by_heat(response.json())
+        else:
+            return []
 
 
 def verify_location(location):
