@@ -23,7 +23,7 @@ def get_state_report():
     if state is None:
         state = ""
     report = Report(state)
-    return jsonify(report.get_report_by_country(report.get_all_reports()))
+    return report.get_report_by_country(report.get_all_reports())
 
 
 @app.route('/local-hospital-capacity', methods=['GET'])
