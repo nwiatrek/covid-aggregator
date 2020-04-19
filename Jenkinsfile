@@ -258,6 +258,7 @@ pipeline {
 
         stage('End') {
             steps {
+                echo 'test'
                 echo 'Ending build'
             }
         }
