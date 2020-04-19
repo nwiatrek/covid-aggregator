@@ -4,3 +4,4 @@ COPY . /tmp
 RUN apt-get update
 RUN pip install -r requirements.txt
 CMD python app.py
+
