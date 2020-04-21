@@ -3,4 +3,4 @@ WORKDIR /tmp
 COPY . /tmp
 RUN apt-get update
 RUN pip install -r covid-aggregator/requirements.txt
-CMD python -m pytest --cov=. --junitxml results.xml tests/
+CMD python -m pytest --cov=. --junitxml results.xml covid-aggregator/tests/
