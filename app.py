@@ -29,8 +29,9 @@ def get_state_report():
 @app.route('/local-hospital-capacity', methods=['GET'])
 def get_cap():
     responses = \
-    requests.get('https://covid19-server.chrismichael.now.sh/api/v1/AggregatedFacilityCapacityCounty').json()['data'][
-        0]['table']
+        requests.get('https://covid19-server.chrismichael.now.sh/api/v1/AggregatedFacilityCapacityCounty').json()[
+            'data'][
+            0]['table']
     tx_response = []
     for response in responses:
         if response['State'] == 'TX' and response['CountyName'] == 'Bexar':
@@ -41,5 +42,5 @@ def get_cap():
 
 
 if __name__ == '__main__':
-    #Setting host to 0.0.0.0 to get around loopback issue with Docker
+    # Setting host to 0.0.0.0 to get around loopback issue with Docker
     app.run(host='0.0.0.0')

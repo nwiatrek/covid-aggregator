@@ -1,10 +1,16 @@
 import unittest
 import requests
 from news.news import *
+import app
 
 
 class TestNews(unittest.TestCase):
-    url = "http://0.0.0.0:5000/news"
+    @classmethod
+    def setUpClass(cls):
+        app.app.testing = True
+        cls.client = app.app.test_client()
+
+    url = "/news"
     valid_location = {
         "location": "US-TX"
     }
@@ -26,23 +32,23 @@ class TestNews(unittest.TestCase):
         self.assertTrue(len(response) == 0)
 
     def test_get_news_report_200(self):
-        r = requests.get(self.url, params=self.valid_location)
+        r = self.client.get(self.url+'?location=US-TX')
         self.assertEqual(r.status_code, 200)
 
     def test_get_news_no_location_gives_error(self):
-        r = requests.get(self.url)
-        self.assertEqual(r.status_code, 500)
-        self.assertEqual(b'No location given', r.content)
+        r = self.client.get(self.url)
+        assert r.status_code == 500
+        assert r.data == b'No location given'
 
     def test_bad_param_gives_error(self):
-        r = requests.get(self.url, params=self.invalid)
-        self.assertEqual(b'Only US supported at the moment', r.content)
-        self.assertEqual(r.status_code, 500)
+        r = self.client.get(self.url + '?location=asdfdsafsd')
+        assert r.data == b'Only US supported at the moment'
+        assert r.status_code == 500
 
     def test_us_invalid_gives_iso_error(self):
-        r = requests.get(self.url, params=self.us_not_valid)
-        self.assertEqual(b'invalid format please look at ISO 3166-1 alpha-2', r.content)
-        self.assertEqual(r.status_code, 500)
+        r = self.client.get(self.url + '?location=US-TXQQ')
+        assert r.data == b'invalid format please look at ISO 3166-1 alpha-2'
+        assert r.status_code == 500
 
 
 if __name__ == '__main__':
